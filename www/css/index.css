@@ -1,8 +1,55 @@
-.app{
+.container {
   position: absolute;
-  top: 10%;
-  left: 10%;
-  width:80%;
-  height: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
+}
+
+.question img {
+  max-width: 100%;
+  height: auto;
+}
+
+.answer {
+  max-width: 100%;
+  text-align: center;
+}
+
+#answer-text {
+  font-size: 1.5em;
+  font-family: sans-serif;
+  padding: 5%;
+}
+
+.button-container {
+  text-align: justify;
+  width: 100%;
+}
+
+.button-container img {
+  display: inline-block;
+  padding: 5%;
+  max-width: 30%;
+}
+
+.button-container:after {
+  content: "";
+  width: 100%;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+@media screen and (orientation: portrait) {
+  .question {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  .question {
+    max-height: 50%;
+    width: auto;
+  }
 }
