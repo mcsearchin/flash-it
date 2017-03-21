@@ -10,27 +10,44 @@ describe('FlashIt', function() {
   });
 
   describe('on ready', function() {
+    var previousQuestionImage;
+
     beforeEach(function() {
       FlashIt.ready();
+      previousQuestionImage = $('#question-image').attr('src');
     });
 
     describe('pressing the right button', function() {
+      beforeEach(function() {
+        $('#right-button').click();
+      });
 
       it('hides the answer div', function() {
-        $('#right-button').click();
-
         var answer = $('.answer');
         expect(answer).toBeHidden();
       });
 
       it('updates the question image', function() {
-        var previousImage = $('#question-image').attr('src');
+        var newQuestionImage = $('#question-image').attr('src');
+        expect(newQuestionImage).toBeTruthy();
+        expect(newQuestionImage).not.toEqual(previousQuestionImage);
+      });
+    });
 
-        $('#right-button').click();
+    describe('pressing the wrong button', function() {
+      beforeEach(function() {
+        $('#wrong-button').click();
+      });
 
-        var newImage = $('#question-image').attr('src');
-        expect(newImage).toBeTruthy();
-        expect(newImage).not.toEqual(previousImage);
+      it('hides the answer div', function() {
+        var answer = $('.answer');
+        expect(answer).toBeHidden();
+      });
+
+      it('updates the question image', function() {
+        var newQuestionImage = $('#question-image').attr('src');
+        expect(newQuestionImage).toBeTruthy();
+        expect(newQuestionImage).not.toEqual(previousQuestionImage);
       });
     });
   });
