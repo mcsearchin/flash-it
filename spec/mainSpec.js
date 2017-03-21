@@ -1,4 +1,4 @@
-describe('FlashIt', function() {
+describe('app', function() {
 
   beforeEach(function() {
     jasmine.getFixtures().fixturesPath = 'base';
@@ -6,14 +6,14 @@ describe('FlashIt', function() {
   });
 
   it('exists', function() {
-    expect(FlashIt).toBeDefined();
+    expect(app).toBeDefined();
   });
 
-  describe('on ready', function() {
+  describe('on document ready', function() {
     var previousQuestionImage;
 
     beforeEach(function() {
-      FlashIt.ready();
+      app.onDocumentReady();
       previousQuestionImage = $('#question-image').attr('src');
     });
 

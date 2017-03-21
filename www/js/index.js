@@ -33,7 +33,15 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
+    },
+
+    onDocumentReady: function() {
+      $('#right-button, #wrong-button').click(function() {
+        $('.answer').hide();
+        $('#question-image').attr('src', 'img/music_notes/Treble-D.png');
+      });
     }
 };
 
 app.initialize();
+$(document).ready(app.onDocumentReady);
