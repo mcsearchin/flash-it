@@ -2,7 +2,7 @@
   "name": "flashit",
   "version": "1.0.0",
   "description": "FlashIt",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "jquery": "3.2.0"
   },
