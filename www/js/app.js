@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -27,12 +28,7 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        console.log('Received Event: ' + id);
+      console.log('onDeviceReady')
     },
 
     onDocumentReady: function() {
@@ -42,6 +38,28 @@ var app = {
       });
     }
 };
+
+app.accelerationListener = function(accelerometer) {
+
+  var that = this;
+  var flipDownCallback;
+
+  function onSuccess(acceleration) {
+    if (acceleration.z == 2.5) {
+      that.flipDownCallback();
+    }
+  }
+
+  function onFailure() {}
+
+  accelerometer.watchAcceleration(onSuccess, onFailure, { frequency: 500 });
+
+  return {
+    onFlipDown: function(callback) {
+      that.flipDownCallback = callback;
+    }
+  }
+}
 
 app.initialize();
 $(document).ready(app.onDocumentReady);

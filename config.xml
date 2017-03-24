@@ -25,4 +25,5 @@
     </platform>
     <engine name="browser" spec="~4.1.0" />
     <engine name="ios" spec="~4.3.1" />
+    <plugin name="cordova-plugin-device-motion" spec="~1.2.4" />
 </widget>
