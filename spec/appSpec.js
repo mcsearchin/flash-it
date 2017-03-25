@@ -54,7 +54,7 @@ describe('app', function() {
 });
 
 
-describe("acceleration listener", function() {
+describe('acceleration listener', function() {
   var subject;
   var accelerometer;
 
@@ -63,11 +63,11 @@ describe("acceleration listener", function() {
     subject = app.accelerationListener(accelerometer);
   });
 
-  it("exists", function() {
+  it('exists', function() {
     expect(subject).toBeDefined();
   });
 
-  it("watches acceleration at the expected frequency", function() {
+  it('watches acceleration at the expected frequency', function() {
     expect(accelerometer.watchAcceleration.calls.count()).toEqual(1);
     expect(accelerometer.watchAcceleration).toHaveBeenCalledWith(
       jasmine.any(Function),
@@ -75,7 +75,7 @@ describe("acceleration listener", function() {
       jasmine.objectContaining({ frequency: 500 }));
   });
 
-  describe("flip down", function() {
+  describe('flip down', function() {
     var accelerationSuccess;
     var flippedDown;
 
@@ -87,20 +87,57 @@ describe("acceleration listener", function() {
       accelerationSuccess({ x: 0.0, y: 0.0, z: 0.0});
     });
 
-    describe("when tilted down to the necessary threshold", function() {
+    describe('when tilted down to the necessary threshold', function() {
+      beforeEach(function() {
+        accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_Z_THRESHOLD});
+      });
+
+      describe('and tilted back up to the necessary threshold', function() {
         beforeEach(function() {
-          accelerationSuccess({ x: 0.0, y: 0.0, z: 7.5});
+          accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_RETURN_Z_THRESHOLD});
         });
 
-        describe("and back up to the necessary threshold", function() {
+        it('responds to the flip down event', function() {
+          expect(flippedDown).toEqual(1);
+        });
+
+        describe('and tilted back down and up past the necessary thresholds', function() {
           beforeEach(function() {
-            accelerationSuccess({ x: 0.0, y: 0.0, z: 2.5});
+            accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_Z_THRESHOLD - 0.01});
+            accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_RETURN_Z_THRESHOLD + 0.01});
           });
 
-          it("responds to the flip down event", function() {
-            expect(flippedDown).toEqual(1);
+          it('responds to the flip down event', function() {
+            expect(flippedDown).toEqual(2);
           });
         });
+      });
+
+      describe('and tilted back up just shy of the necessary threshold', function() {
+        beforeEach(function() {
+          accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_RETURN_Z_THRESHOLD - 0.01});
+        });
+
+        it('does not respond to the flip down event', function() {
+          expect(flippedDown).toEqual(0);
+        });
+      });
+    });
+
+    describe('when tilted down just shy of the necessary threshold', function() {
+      beforeEach(function() {
+        accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_Z_THRESHOLD + 0.01});
+      });
+
+      describe('and tilted back up to the necessary threshold', function() {
+        beforeEach(function() {
+          accelerationSuccess({ x: 0.0, y: 0.0, z: subject.DOWN_RETURN_Z_THRESHOLD});
+        });
+
+        it('responds to the flip down event', function() {
+          expect(flippedDown).toEqual(0);
+        });
+      });
     });
   })
 });
