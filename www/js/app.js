@@ -17,29 +17,35 @@
  * under the License.
  */
 
-var app = {
-    // Application Constructor
-    initialize: function() {
+var flashIt = {};
+
+flashIt.app = function(accelerationListener) {
+
+  var self = {
+    init: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
     onDeviceReady: function() {
-      console.log('onDeviceReady')
+      console.log('onDeviceReady');
+      accelerationListener.init(navigator.accelerometer);
+      accelerationListener.onFlipDown(nextCard);
     },
 
     onDocumentReady: function() {
-      $('#right-button, #wrong-button').click(function() {
-        $('.answer').hide();
-        $('#question-image').attr('src', 'img/music_notes/Treble-D.png');
-      });
+      $('#right-button, #wrong-button').click(nextCard);
     }
+  };
+
+  function nextCard() {
+    $('.answer').hide();
+    $('#question-image').attr('src', 'img/music_notes/Treble-D.png');
+  }
+
+  return self;
 };
 
-app.accelerationListener = function(accelerometer) {
+flashIt.accelerationListener = function() {
 
   var that = this;
   var flipDownCallback;
@@ -49,6 +55,9 @@ app.accelerationListener = function(accelerometer) {
     DOWN_Z_THRESHOLD: -7.5,
     DOWN_RETURN_Z_THRESHOLD: -2.5,
 
+    init: function(accelerometer) {
+      accelerometer.watchAcceleration(onAccelerationSuccess, onAcclerationFailure, { frequency: 500 });
+    },
     onFlipDown: function(callback) {
       that.flipDownCallback = callback;
     }
@@ -63,10 +72,9 @@ app.accelerationListener = function(accelerometer) {
 
   function onAcclerationFailure() {};
 
-  accelerometer.watchAcceleration(onAccelerationSuccess, onAcclerationFailure, { frequency: 500 });
-
   return self;
-}
+};
 
-app.initialize();
-$(document).ready(app.onDocumentReady);
+flashIt.theApp = flashIt.app(flashIt.accelerationListener());
+flashIt.theApp.init();
+$(document).ready(flashIt.theApp.onDocumentReady);
