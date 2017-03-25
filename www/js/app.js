@@ -29,7 +29,7 @@ flashIt.app = function(accelerationListener) {
     onDeviceReady: function() {
       console.log('onDeviceReady');
       accelerationListener.init(navigator.accelerometer);
-      accelerationListener.onFlipDown(nextCard);
+      accelerationListener.onFlipDown(handleFlipDown);
     },
 
     onDocumentReady: function() {
@@ -37,9 +37,21 @@ flashIt.app = function(accelerationListener) {
     }
   };
 
+  function handleFlipDown() {
+    if ($('.answer').is(':visible')) {
+      nextCard();
+    } else {
+      showAnswer();
+    }
+  }
+
   function nextCard() {
     $('.answer').hide();
     $('#question-image').attr('src', 'img/music_notes/Treble-D.png');
+  }
+
+  function showAnswer() {
+    $('.answer').show();
   }
 
   return self;
@@ -56,7 +68,7 @@ flashIt.accelerationListener = function() {
     DOWN_RETURN_Z_THRESHOLD: -2.5,
 
     init: function(accelerometer) {
-      accelerometer.watchAcceleration(onAccelerationSuccess, onAcclerationFailure, { frequency: 500 });
+      accelerometer.watchAcceleration(onAccelerationSuccess, onAcclerationFailure, { frequency: 250 });
     },
     onFlipDown: function(callback) {
       that.flipDownCallback = callback;

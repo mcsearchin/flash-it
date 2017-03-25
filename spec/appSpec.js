@@ -71,22 +71,43 @@ describe('app', function() {
 
     describe('on flip down', function() {
       var flipDown;
+      var answer;
 
       beforeEach(function() {
         flipDown = accelerationListener.onFlipDown.calls.mostRecent().args[0];
-        flipDown();
       });
 
-      it('hides the answer div', function() {
-        var answer = $('.answer');
-        expect(answer).toBeHidden();
+      describe('when the answer is displayed', function() {
+        beforeEach(function() {
+          answer = $('.answer');
+          answer.show();
+
+          flipDown();
+        });
+
+        it('hides the answer div', function() {
+          expect(answer).toBeHidden();
+        });
+
+        it('updates the question image', function() {
+          var newQuestionImage = $('#question-image').attr('src');
+          expect(newQuestionImage).toBeTruthy();
+          expect(newQuestionImage).not.toEqual(previousQuestionImage);
+        });
       });
 
-      it('updates the question image', function() {
-        var newQuestionImage = $('#question-image').attr('src');
-        expect(newQuestionImage).toBeTruthy();
-        expect(newQuestionImage).not.toEqual(previousQuestionImage);
-      });
+      describe('when the answer is hidden', function() {
+        beforeEach(function() {
+          answer = $('.answer');
+          answer.hide();
+
+          flipDown();
+        });
+
+        it('shows the answer div', function() {
+          expect($('.answer')).toBeVisible();
+        });
+      })
     })
   });
 });
@@ -116,7 +137,7 @@ describe('acceleration listener', function() {
       expect(accelerometer.watchAcceleration).toHaveBeenCalledWith(
         jasmine.any(Function),
         jasmine.any(Function),
-        jasmine.objectContaining({ frequency: 500 }));
+        jasmine.objectContaining({ frequency: 250 }));
     });
 
     describe('flip down', function() {
